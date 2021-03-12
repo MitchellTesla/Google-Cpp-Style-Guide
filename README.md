@@ -1,5 +1,5 @@
-# Google-C-Style-Guide
-a Google C++ Style Guide written by Justin Mitchell
+# Google-C-Style-Guide 2021
+a comprehensive Google C++ Style Guide written by Justin Mitchell
 
  
 Table of Contents
@@ -62,3 +62,14 @@ With a codebase of 100+ million lines and thousands of engineers, some mistakes 
 Concede to optimization when necessary
 Performance optimizations can sometimes be necessary and appropriate, even when they conflict with the other principles of this document.
 The intent of this document is to provide maximal guidance with reasonable restriction. As always, common sense and good taste should prevail. By this we specifically refer to the established conventions of the entire Google C++ community, not just your personal preferences or those of your team. Be skeptical about and reluctant to use clever or unusual constructs: the absence of a prohibition is not the same as a license to proceed. Use your judgment, and if you are unsure, please don't hesitate to ask your project leads to get additional input.
+
+
+Parting Thoughts:
+Use common sense and BE CONSISTENT.
+
+If you are editing code, take a few minutes to look at the code around you and determine its style. If they use spaces around their if clauses, you should, too. If their comments have little boxes of stars around them, make your comments have little boxes of stars around them too.
+
+The point of having style guidelines is to have a common vocabulary of coding so people can concentrate on what you are saying, rather than on how you are saying it. We present global style rules here so people know the vocabulary. But local style is also important. If code you add to a file looks drastically different from the existing code around it, the discontinuity throws readers out of their rhythm when they go to read it. Try to avoid this.
+
+OK, enough writing about writing code; the code itself is much more interesting. Have fun! 
+ Justin Mitchell ©️ 2021
