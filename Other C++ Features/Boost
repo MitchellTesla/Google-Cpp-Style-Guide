@@ -1,0 +1,27 @@
+Use only approved libraries from the Boost library collection.
+
+The Boost library collection is a popular collection of peer-reviewed, free, open-source C++ libraries.
+
+Boost code is generally very high-quality, is widely portable, and fills many important gaps in the C++ standard library, such as type traits and better binders.
+
+Some Boost libraries encourage coding practices which can hamper readability, such as metaprogramming and other advanced template techniques, and an excessively "functional" style of programming.
+
+In order to maintain a high level of readability for all contributors who might read and maintain code, we only allow an approved subset of Boost features. Currently, the following libraries are permitted:
+
+Call Traits from boost/call_traits.hpp
+Compressed Pair from boost/compressed_pair.hpp
+The Boost Graph Library (BGL) from boost/graph, except serialization (adj_list_serialize.hpp) and parallel/distributed algorithms and data structures (boost/graph/parallel/* and boost/graph/distributed/*).
+Property Map from boost/property_map, except parallel/distributed property maps (boost/property_map/parallel/*).
+Iterator from boost/iterator
+The part of Polygon that deals with Voronoi diagram construction and doesn't depend on the rest of Polygon: boost/polygon/voronoi_builder.hpp, boost/polygon/voronoi_diagram.hpp, and boost/polygon/voronoi_geometry_type.hpp
+Bimap from boost/bimap
+Statistical Distributions and Functions from boost/math/distributions
+Special Functions from boost/math/special_functions
+Root Finding Functions from boost/math/tools
+Multi-index from boost/multi_index
+Heap from boost/heap
+The flat containers from Container: boost/container/flat_map, and boost/container/flat_set
+Intrusive from boost/intrusive.
+The boost/sort library.
+Preprocessor from boost/preprocessor.
+We are actively considering adding other Boost features to the list, so this list may be expanded in the future.
