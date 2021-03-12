@@ -1,0 +1,34 @@
+No spaces around period or arrow. Pointer operators do not have trailing spaces.
+
+The following are examples of correctly-formatted pointer and reference expressions:
+
+x = *p;
+p = &x;
+x = r.y;
+x = r->y;
+Note that:
+
+There are no spaces around the period or arrow when accessing a member.
+Pointer operators have no space after the * or &.
+When referring to a pointer or reference (variable declarations or definitions, arguments, return types, template parameters, etc), you may place the space before or after the asterisk/ampersand. In the trailing-space style, the space is elided in some cases (template parameters, etc).
+
+// These are fine, space preceding.
+char *c;
+const std::string &str;
+int *GetPointer();
+std::vector<char *>
+
+// These are fine, space following (or elided).
+char* c;
+const std::string& str;
+int* GetPointer();
+std::vector<char*>  // Note no space between '*' and '>'
+You should do this consistently within a single file. When modifying an existing file, use the style in that file.
+
+It is allowed (if unusual) to declare multiple variables in the same declaration, but it is disallowed if any of those have pointer or reference decorations. Such declarations are easily misread.
+// Fine if helpful for readability.
+int x, y;
+int x, *y;  // Disallowed - no & or * in multiple declaration
+int* x, *y;  // Disallowed - no & or * in multiple declaration; inconsistent spacing
+char * c;  // Bad - spaces on both sides of *
+const std::string & str;  // Bad - spaces on both sides of &
