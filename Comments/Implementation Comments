@@ -1,0 +1,20 @@
+In your implementation you should have comments in tricky, non-obvious, interesting, or important parts of your code.
+
+Explanatory Comments
+Tricky or complicated code blocks should have comments before them. Example:
+
+// Divide result by two, taking into account that x
+// contains the carry from the add.
+for (int i = 0; i < result->size(); ++i) {
+  x = (x << 8) + (*result)[i];
+  (*result)[i] = x >> 1;
+  x &= 1;
+}
+Line-end Comments
+Also, lines that are non-obvious should get a comment at the end of the line. These end-of-line comments should be separated from the code by 2 spaces. Example:
+
+// If we have enough memory, mmap the data portion too.
+mmap_budget = max<int64>(0, mmap_budget - index_->length());
+if (mmap_budget >= data_size_ && !MmapData(mmap_chunk_bytes, mlock))
+  return;  // Error already logged.
+Note that there are both comments that describe what the code is doing, and comments that mention that an error has already been logged when the function returns.
