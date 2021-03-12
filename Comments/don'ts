@@ -1,0 +1,16 @@
+Do not state the obvious. In particular, don't literally describe what code does, unless the behavior is nonobvious to a reader who understands C++ well. Instead, provide higher level comments that describe why the code does what it does, or make the code self describing.
+
+Compare this:
+// Find the element in the vector.  <-- Bad: obvious!
+if (std::find(v.begin(), v.end(), element) != v.end()) {
+  Process(element);
+}
+To this:
+// Process "element" unless it was already processed.
+if (std::find(v.begin(), v.end(), element) != v.end()) {
+  Process(element);
+}
+Self-describing code doesn't need a comment. The comment from the example above would be obvious:
+if (!IsAlreadyProcessed(element)) {
+  Process(element);
+}
