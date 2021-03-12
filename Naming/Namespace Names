@@ -1,0 +1,8 @@
+Namespace names are all lower-case, with words separated by underscores. Top-level namespace names are based on the project name . Avoid collisions between nested namespaces and well-known top-level namespaces.
+The name of a top-level namespace should usually be the name of the project or team whose code is contained in that namespace. The code in that namespace should usually be in a directory whose basename matches the namespace name (or in subdirectories thereof).
+
+Keep in mind that the rule against abbreviated names applies to namespaces just as much as variable names. Code inside the namespace seldom needs to mention the namespace name, so there's usually no particular need for abbreviation anyway.
+
+Avoid nested namespaces that match well-known top-level namespaces. Collisions between namespace names can lead to surprising build breaks because of name lookup rules. In particular, do not create any nested std namespaces. Prefer unique project identifiers (websearch::index, websearch::index_util) over collision-prone names like websearch::util. Also avoid overly deep nesting namespaces (TotW #130).
+
+For internal namespaces, be wary of other code being added to the same internal namespace causing a collision (internal helpers within a team tend to be related and may lead to collisions). In such a situation, using the filename to make a unique internal name is helpful (websearch::index::frobber_internal for use in frobber.h).
