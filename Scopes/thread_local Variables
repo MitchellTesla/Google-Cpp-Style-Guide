@@ -1,0 +1,28 @@
+thread_local variables that aren't declared inside a function must be initialized with a true compile-time constant, and this must be enforced by using the ABSL_CONST_INIT attribute. Prefer thread_local over other ways of defining thread-local data.
+
+Starting with C++11, variables can be declared with the thread_local specifier:
+
+thread_local Foo foo = ...;
+Such a variable is actually a collection of objects, so that when different threads access it, they are actually accessing different objects. thread_local variables are much like static storage duration variables in many respects. For instance, they can be declared at namespace scope, inside functions, or as static class members, but not as ordinary class members.
+
+thread_local variable instances are initialized much like static variables, except that they must be initialized separately for each thread, rather than once at program startup. This means that thread_local variables declared within a function are safe, but other thread_local variables are subject to the same initialization-order issues as static variables (and more besides).
+
+thread_local variable instances are destroyed when their thread terminates, so they do not have the destruction-order issues of static variables.
+
+Thread-local data is inherently safe from races (because only one thread can ordinarily access it), which makes thread_local useful for concurrent programming.
+thread_local is the only standard-supported way of creating thread-local data.
+Accessing a thread_local variable may trigger execution of an unpredictable and uncontrollable amount of other code.
+thread_local variables are effectively global variables, and have all the drawbacks of global variables other than lack of thread-safety.
+The memory consumed by a thread_local variable scales with the number of running threads (in the worst case), which can be quite large in a program.
+An ordinary class member cannot be thread_local.
+thread_local may not be as efficient as certain compiler intrinsics.
+thread_local variables inside a function have no safety concerns, so they can be used without restriction. Note that you can use a function-scope thread_local to simulate a class- or namespace-scope thread_local by defining a function or static method that exposes it:
+
+Foo& MyThreadLocalFoo() {
+  thread_local Foo result = ComplicatedInitialization();
+  return result;
+}
+thread_local variables at class or namespace scope must be initialized with a true compile-time constant (i.e., they must have no dynamic initialization). To enforce this, thread_local variables at class or namespace scope must be annotated with ABSL_CONST_INIT (or constexpr, but that should be rare):
+
+ABSL_CONST_INIT thread_local Foo foo = ...;
+thread_local should be preferred over other mechanisms for defining thread-local data.
