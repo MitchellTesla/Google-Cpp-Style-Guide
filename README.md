@@ -1,4 +1,4 @@
-# Google-C-Style-Guide 2021
+# Google C++ Style Guide - 2021
 a comprehensive Google C++ Style Guide
 
  
