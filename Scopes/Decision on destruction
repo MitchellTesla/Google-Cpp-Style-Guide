@@ -1,0 +1,67 @@
+When destructors are trivial, their execution is not subject to ordering at all (they are effectively not "run"); otherwise we are exposed to the risk of accessing objects after the end of their lifetime. Therefore, we only allow objects with static storage duration if they are trivially destructible. Fundamental types (like pointers and int) are trivially destructible, as are arrays of trivially destructible types. Note that variables marked with constexpr are trivially destructible.
+
+const int kNum = 10;  // allowed
+
+struct X { int n; };
+const X kX[] = {{1}, {2}, {3}};  // allowed
+
+void foo() {
+  static const char* const kMessages[] = {"hello", "world"};  // allowed
+}
+
+// allowed: constexpr guarantees trivial destructor
+constexpr std::array<int, 3> kArray = {{1, 2, 3}};
+// bad: non-trivial destructor
+const std::string kFoo = "foo";
+
+// bad for the same reason, even though kBar is a reference (the
+// rule also applies to lifetime-extended temporary objects)
+const std::string& kBar = StrCat("a", "b", "c");
+
+void bar() {
+  // bad: non-trivial destructor
+  static std::map<int, int> kData = {{1, 0}, {2, 0}, {3, 0}};
+}
+Note that references are not objects, and thus they are not subject to the constraints on destructibility. The constraint on dynamic initialization still applies, though. In particular, a function-local static reference of the form static T& t = *new T; is allowed.
+
+Decision on initialization
+Initialization is a more complex topic. This is because we must not only consider whether class constructors execute, but we must also consider the evaluation of the initializer:
+
+int n = 5;    // fine
+int m = f();  // ? (depends on f)
+Foo x;        // ? (depends on Foo::Foo)
+Bar y = g();  // ? (depends on g and on Bar::Bar)
+All but the first statement expose us to indeterminate initialization ordering.
+
+The concept we are looking for is called constant initialization in the formal language of the C++ standard. It means that the initializing expression is a constant expression, and if the object is initialized by a constructor call, then the constructor must be specified as constexpr, too:
+
+struct Foo { constexpr Foo(int) {} };
+
+int n = 5;  // fine, 5 is a constant expression
+Foo x(2);   // fine, 2 is a constant expression and the chosen constructor is constexpr
+Foo a[] = { Foo(1), Foo(2), Foo(3) };  // fine
+Constant initialization is always allowed. Constant initialization of static storage duration variables should be marked with constexpr or where possible the ABSL_CONST_INIT attribute. Any non-local static storage duration variable that is not so marked should be presumed to have dynamic initialization, and reviewed very carefully.
+
+By contrast, the following initializations are problematic:
+
+// Some declarations used below.
+time_t time(time_t*);      // not constexpr!
+int f();                   // not constexpr!
+struct Bar { Bar() {} };
+
+// Problematic initializations.
+time_t m = time(nullptr);  // initializing expression not a constant expression
+Foo y(f());                // ditto
+Bar b;                     // chosen constructor Bar::Bar() not constexpr
+Dynamic initialization of nonlocal variables is discouraged, and in general it is forbidden. However, we do permit it if no aspect of the program depends on the sequencing of this initialization with respect to all other initializations. Under those restrictions, the ordering of the initialization does not make an observable difference. For example:
+
+int p = getpid();  // allowed, as long as no other static variable
+                   // uses p in its own initialization
+Dynamic initialization of static local variables is allowed (and common).
+
+Common patterns
+Global strings: if you require a global or static string constant, consider using a simple character array, or a char pointer to the first element of a string literal. String literals have static storage duration already and are usually sufficient.
+Maps, sets, and other dynamic containers: if you require a static, fixed collection, such as a set to search against or a lookup table, you cannot use the dynamic containers from the standard library as a static variable, since they have non-trivial destructors. Instead, consider a simple array of trivial types, e.g., an array of arrays of ints (for a "map from int to int"), or an array of pairs (e.g., pairs of int and const char*). For small collections, linear search is entirely sufficient (and efficient, due to memory locality); consider using the facilities from absl/algorithm/container.h for the standard operations. If necessary, keep the collection in sorted order and use a binary search algorithm. If you do really prefer a dynamic container from the standard library, consider using a function-local static pointer, as described below.
+Smart pointers (unique_ptr, shared_ptr): smart pointers execute cleanup during destruction and are therefore forbidden. Consider whether your use case fits into one of the other patterns described in this section. One simple solution is to use a plain pointer to a dynamically allocated object and never delete it (see last item).
+Static variables of custom types: if you require static, constant data of a type that you need to define yourself, give the type a trivial destructor and a constexpr constructor.
+If all else fails, you can create an object dynamically and never delete it by using a function-local static pointer or reference (e.g., static const auto& impl = *new T(args...);).
