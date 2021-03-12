@@ -1,0 +1,50 @@
+In an if statement, including its optional else if and else clauses, put one space between the if and the opening parenthesis, and between the closing parenthesis and the curly brace (if any), but no spaces between the parentheses and the condition or initializer. If the optional initializer is present, put a space or newline after the semicolon, but not before.
+
+if(condition) {              // Bad - space missing after IF
+if ( condition ) {           // Bad - space between the parentheses and the condition
+if (condition){              // Bad - space missing before {
+if(condition){               // Doubly bad
+
+if (int a = f();a == 10) {   // Bad - space missing after the semicolon
+Use curly braces for the controlled statements following if, else if and else. Break the line immediately after the opening brace, and immediately before the closing brace. A subsequent else, if any, appears on the same line as the preceding closing brace, separated by a space.
+
+if (condition) {                   // no spaces inside parentheses, space before brace
+  DoOneThing();                    // two space indent
+  DoAnotherThing();
+} else if (int a = f(); a != 3) {  // closing brace on new line, else on same line
+  DoAThirdThing(a);
+} else {
+  DoNothing();
+}
+For historical reasons, we allow one exception to the above rules: if an if statement has no else or else if clauses, then the curly braces for the controlled statement or the line breaks inside the curly braces may be omitted if as a result the entire if statement appears on either a single line (in which case there is a space between the closing parenthesis and the controlled statement) or on two lines (in which case there is a line break after the closing parenthesis and there are no braces). For example, the following forms are allowed under this exception.
+
+if (x == kFoo) return new Foo();
+
+if (x == kBar)
+  return new Bar(arg1, arg2, arg3);
+
+if (x == kQuz) { return new Quz(1, 2, 3); }
+Use this style only when the statement is brief, and consider that conditional statements with complex conditions or controlled statements may be more readable with curly braces. Some projects require curly braces always.
+
+Finally, these are not permitted:
+
+// Bad - IF statement with ELSE is missing braces
+if (x) DoThis();
+else DoThat();
+
+// Bad - IF statement with ELSE does not have braces everywhere
+if (condition)
+  foo;
+else {
+  bar;
+}
+
+// Bad - IF statement is too long to omit braces
+if (condition)
+  // Comment
+  DoSomething();
+
+// Bad - IF statement is too long to omit braces
+if (condition1 &&
+    condition2)
+  DoSomething();
