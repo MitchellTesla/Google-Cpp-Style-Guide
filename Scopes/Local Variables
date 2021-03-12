@@ -1,0 +1,27 @@
+Place a function's variables in the narrowest scope possible, and initialize variables in the declaration.
+
+C++ allows you to declare variables anywhere in a function. We encourage you to declare them in as local a scope as possible, and as close to the first use as possible. This makes it easier for the reader to find the declaration and see what type the variable is and what it was initialized to. In particular, initialization should be used instead of declaration and assignment, e.g.,:
+
+int i;
+i = f();      // Bad -- initialization separate from declaration.
+int j = g();  // Good -- declaration has initialization.
+std::vector<int> v;
+v.push_back(1);  // Prefer initializing using brace initialization.
+v.push_back(2);
+std::vector<int> v = {1, 2};  // Good -- v starts initialized.
+Variables needed for if, while and for statements should normally be declared within those statements, so that such variables are confined to those scopes. E.g.:
+
+while (const char* p = strchr(str, '/')) str = p + 1;
+There is one caveat: if the variable is an object, its constructor is invoked every time it enters scope and is created, and its destructor is invoked every time it goes out of scope.
+
+// Inefficient implementation:
+for (int i = 0; i < 1000000; ++i) {
+  Foo f;  // My ctor and dtor get called 1000000 times each.
+  f.DoSomething(i);
+}
+It may be more efficient to declare such a variable used in a loop outside that loop:
+
+Foo f;  // My ctor and dtor get called once each.
+for (int i = 0; i < 1000000; ++i) {
+  f.DoSomething(i);
+}
