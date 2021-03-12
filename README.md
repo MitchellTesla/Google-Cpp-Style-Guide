@@ -1,5 +1,5 @@
 # Google-C-Style-Guide 2021
-a comprehensive Google C++ Style Guide written by Justin Mitchell
+a comprehensive Google C++ Style Guide
 
  
 Table of Contents
