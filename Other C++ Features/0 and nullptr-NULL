@@ -1,0 +1,7 @@
+Use nullptr for pointers, and '\0' for chars (and not the 0 literal).
+
+For pointers (address values), use nullptr, as this provides type-safety.
+
+For C++03 projects, prefer NULL to 0. While the values are equivalent, NULL looks more like a pointer to the reader, and some C++ compilers provide special definitions of NULL which enable them to give useful warnings. Never use NULL for numeric (integer or floating-point) values.
+
+Use '\0' for the null character. Using the correct type makes the code more readable
