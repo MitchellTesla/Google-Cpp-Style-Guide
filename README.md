@@ -1,5 +1,5 @@
 # Google C++ Style Guide - 2021
-a comprehensive Google C++ Style Guide
+a comprehensive Google C++ Style Guide for research and development 
 
  
 Table of Contents
